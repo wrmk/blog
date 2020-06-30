@@ -49,10 +49,19 @@ post '/new' do
 end
 
 get '/details/:post_id' do
-	post_id = params[:post_id]
 
+	#берем post_id из строки которую набрал пользователь
+	post_id = params[:post_id]
+	# выцепляем из БД один массив с постом
 	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [post_id]
+	# превращаем массив в хэш, к которому по ключу будем обращаться на странице details
 	@row = results[0]
 
 	erb :details
 end
+
+post '/details/:post_id' do
+	post_id = params[:post_id]
+	content = params[:content]
+	erb "you type #{content} for post #{post_id}"
+end	
