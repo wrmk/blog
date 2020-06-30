@@ -45,5 +45,11 @@ post '/new' do
 	@db.execute 'INSERT INTO Posts (content, created_date) values (?,datetime())', [content]
 
 	redirect to '/'
-	erb  "you type #{content}"
+	erb  "you type #{content}" 
+end
+
+get '/details/:post_id' do
+	post_id = params[:post_id]
+
+	erb "info about post with id #{post_id}"
 end
