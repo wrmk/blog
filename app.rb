@@ -2,35 +2,41 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
+require 'sqlite3'
+
+def init_db
+	@db = SQLite3::Database.new 'blog.db'
+	@db.results_as_hash = true
+end
+
+before do
+	init_db
+end
+
+configure do
+	init_db
+	@db.execute 'CREATE TABLE IF NOT EXISTS Posts
+	(
+		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+		"created_date" DATE,
+		"content" TEXT
+	);'
+end
 
 get '/' do
 	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School!!</a>"			
 end
 
-get '/about' do
-  erb :about
+get '/new' do
+	erb :new
 end
 
-get '/visit' do
-  erb :visit
-end
+post '/new' do
+	content = params[:content]
 
-get '/contacts' do
-  erb :contacts
-end
-
-post '/visit' do
-	@user_name = params[:user_name]
-	@user_phone = params[:user_phone]
-	@user_date_visit = params[:user_date_visit]
-	@master = params[:selected_master]
-	File.open('./public/visit.txt', 'a'){|f| f.write("#{@user_name},#{@user_phone},#{@user_date_visit},#{@master}\n")}
-	erb :visit
-end
-
-post '/contacts' do
-	@user_mail = params[:user_mail]
-	@user_feedback = params[:user_feedback]
-	File.open('./public/contacts.txt', 'a'){|f| f.write("Begin\n#{'=' * 20}\n#{@user_mail}\n#{@user_feedback}\n#{'=' * 20}\nEnd\n")}
-	erb :contacts
+	if content.length <= 0
+		@error = 'type your text'
+		return erb :new
+	end
+	erb  "you type #{content}"
 end
