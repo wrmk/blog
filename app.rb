@@ -65,6 +65,9 @@ get '/details/:post_id' do
 	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [post_id]
 	# превращаем массив в хэш, к которому по ключу будем обращаться на странице details
 	@row = results[0]
+
+	# выводим комментарии из базы данных
+	@comments = @db.execute 'SELECT  * FROM Comments where post_id= ? order by id', [post_id]
  
 	erb :details
 end
