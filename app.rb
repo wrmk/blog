@@ -75,10 +75,12 @@ end
 post '/details/:post_id' do
 	post_id = params[:post_id]
 	content = params[:content]
+
 	if content.length <= 0
-		@error = 'type your text'
+		@error = 'type your comment'
 		redirect to('/details/' + post_id)
 	else
+
 	@db.execute 'INSERT INTO Comments (content, created_date, post_id) values (?,datetime(), ?)', [content, post_id]
 	redirect to('/details/' + post_id)	
 	end
